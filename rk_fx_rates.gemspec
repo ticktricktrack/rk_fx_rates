@@ -27,5 +27,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'httparty'
   spec.add_runtime_dependency 'chronic'
-  spec.add_runtime_dependency 'pry-remote'
+
+  # only for dirty testing
+  # spec.add_runtime_dependency 'pry-remote'
 end
