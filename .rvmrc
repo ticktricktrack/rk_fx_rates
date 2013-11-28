@@ -3,4 +3,4 @@ rvm_gemset_create_on_use_flag=1
 # switch to default ruby version when exiting directory
 rvm_project_rvmrc_default=1
 # use ruby 1.9.3 with a specific gemset
-rvm ruby-2.1.0-preview2@rk_rx_rates
+rvm ruby-2.0.0-p353@rk_fx
