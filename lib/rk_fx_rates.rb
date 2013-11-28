@@ -25,6 +25,7 @@ module RkFxRates
 
   	def initialize(source = RkFxRates::Provider::Ecb)
   		@source = source
+      @fx_hash = retrieve
   	end
 
     def retrieve
@@ -49,18 +50,24 @@ module RkFxRates
       return to_euro(date, from_currency) * from_euro(date, to_currency)
     end
 
+    def available_currencies
+      @fx_hash["data"].first[1].keys
+    end
+
+    def available_dates
+      return @fx_hash["data"].keys
+    end
+
     private
     	
     def from_euro(date, to_currency)
       return 1.0 if to_currency == 'EUR'
-      data = retrieve
-      rate = data[date][to_currency]
+      rate = @fx_hash["data"][date][to_currency]
     end
 
     def to_euro(date, from_currency)
       return 1.0 if from_currency == 'EUR'
-      data = retrieve
-      rate = 1.0 / data[date][from_currency]
+      rate = 1.0 / @fx_hash["data"][date][from_currency]
     end
 
     def store(fx_hash)

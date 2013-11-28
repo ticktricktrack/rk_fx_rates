@@ -31,6 +31,15 @@ describe RkFxRates do
     @fx_api.at(date, 'EUR', 'EUR').should be == 1.0
   end
 
+  it "should provide a list with the available currencies" do
+    @fx_api.available_currencies.should include("USD")
+  end
+
+  it "should provide a list with the available dates" do
+    date = Chronic.parse('last monday').to_date
+    @fx_api.available_dates.should include(date)
+  end
+
   context "with existing and current data" do
     before(:each) do
       @fx_api.retrieve_latest

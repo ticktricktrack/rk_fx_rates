@@ -9,13 +9,14 @@ module RkFxRates
       # see rk_fx_rates.rb for data structure description
       def self.generate_fx_hash(data)
         fx_hash = Hash.new
+        fx_hash["data"] = Hash.new
         fx_hash["downloaded_at"] = Date.today
-        
+
         data["Envelope"]["Cube"]["Cube"].each do |daily|
           date = Chronic.parse( daily["time"] ).to_date
-          fx_hash[date] = Hash.new
+          fx_hash["data"][date] = Hash.new
           daily["Cube"].each do |currency|
-            fx_hash[date] [currency["currency"]] = currency["rate"].to_f
+            fx_hash["data"][date] [currency["currency"]] = currency["rate"].to_f
           end
         end
         return fx_hash
