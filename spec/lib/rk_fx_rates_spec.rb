@@ -3,6 +3,9 @@ require 'spec_helper'
 describe RkFxRates do
 
   before(:each) do
+    # too slow
+    # File.delete('exchange_rates.store')
+    @date = Chronic.parse('last monday').to_date
     @fx_api = RkFxRates::ExchangeRate.new
   end
 
@@ -17,18 +20,16 @@ describe RkFxRates do
   # using the last monday to make sure the test runs with a weekday date
   # simplified case with Euro as the start currency
   it "should calcute the Exchange rate from EUR to USD" do
-    date = Chronic.parse('last monday').to_date
-    @fx_api.at( date, 'EUR', 'USD' ).should be > 1.2
+    @fx_api.at( @date, 'EUR', 'USD' ).should be > 1.2
   end
 
   it "should calculate the exchange rate from GBP to USD" do
-    date = Chronic.parse('last monday').to_date
-    @fx_api.at(date, 'GBP', 'USD').should be > 1.5
+    @fx_api.at( @date, 'GBP', 'USD').should be > 1.5
   end
 
   it "should calculate the exchange rate from EUR to EUR" do
     date = Chronic.parse('last monday').to_date
-    @fx_api.at(date, 'EUR', 'EUR').should be == 1.0
+    @fx_api.at( @date, 'EUR', 'EUR').should be == 1.0
   end
 
   it "should provide a list with the available currencies" do
@@ -36,8 +37,7 @@ describe RkFxRates do
   end
 
   it "should provide a list with the available dates" do
-    date = Chronic.parse('last monday').to_date
-    @fx_api.available_dates.should include(date)
+    @fx_api.available_dates.should include(@date)
   end
 
   context "with existing and current data" do
@@ -47,8 +47,7 @@ describe RkFxRates do
     end
 
     it "should not download the data again" do
-      date = Chronic.parse('last monday').to_date
-      @fx_api.at(date, 'GBP', 'USD').should be > 1.5
+      @fx_api.at( @date, 'GBP', 'USD').should be > 1.5
     end
 
     after(:each) do

@@ -23,11 +23,14 @@ module RkFxRates
   class ExchangeRate
     include HTTParty
 
+
+    # Load Ecb as default provider
   	def initialize(source = RkFxRates::Provider::Ecb)
   		@source = source
       @fx_hash = retrieve
   	end
 
+    # Only download the latest update when the stored data is outdated or not available
     def retrieve
       retrieve_latest unless File.exists?('exchange_rates.store')
       fx_hash = YAML::load_file('exchange_rates.store')['rates']
@@ -46,6 +49,7 @@ module RkFxRates
       return fx_hash
     end
 
+    # calculates the rate by converting to EUR first
     def at(date, from_currency, to_currency)
       return to_euro(date, from_currency) * from_euro(date, to_currency)
     end
@@ -54,8 +58,9 @@ module RkFxRates
       @fx_hash["data"].first[1].keys
     end
 
+    # returns collection in Ruby::Date format
     def available_dates
-      return @fx_hash["data"].keys
+      @fx_hash["data"].keys
     end
 
     private
@@ -76,5 +81,6 @@ module RkFxRates
         store['rates'] = fx_hash        
       end
     end
-  end 
-end
+    
+  end # class ExchangeRate
+end # module RkFxRates
